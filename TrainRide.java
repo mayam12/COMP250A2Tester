@@ -11,16 +11,30 @@ public class TrainRide {
         // Travels from Little Whinging to Hogwarts.
         tNet.travel("1.Little Whinging", "Scarlet", "5.Hogwarts", "Purple");
         tNet.undance();
+        //New Tests
+        //Same Departure and arrival
         tNet.travel("1.Little Whinging", "Scarlet", "1.Little Whinging", "Scarlet");
         tNet.undance();
+        //One station Away
         tNet.travel("1.Little Whinging", "Scarlet", "2.Wizard Hat", "Scarlet");
         tNet.undance();
+        //One transfer Away
         tNet.travel("4.Diagon Alley- 1/3", "Scarlet", "2.Diagon Alley - 2/3", "Grey");
         tNet.undance();
+        //Starts at the right terminus
         tNet.travel("5.St Mungo's", "Scarlet", "4.Diagon Alley- 1/3", "Scarlet");
         tNet.undance();
-
+        try {
+            tNet.travel(" 1.Gringotts", "Grey", "Fake Station", "Scarlet");
+        }
+        catch (Exception e){
+            System.out.println("This threw an unexpected exception, program should have continued to 168 hours" + e);
+        }
         System.out.println("Done!");
+        tNet.printPlan();
+
+
+
         tNet.printPlan();
         // Resets the network to its initial position
         System.out.println("Resetting the network");
