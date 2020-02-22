@@ -25,13 +25,32 @@ public class TrainRide {
         tNet.travel("5.St Mungo's", "Scarlet", "4.Diagon Alley- 1/3", "Scarlet");
         tNet.undance();
         try {
-            tNet.travel(" 1.Gringotts", "Grey", "Fake Station", "Scarlet");
+            tNet.travel("5.St Mungo's", "Scarlet", "3. Leaky Cauldron", "Scarlet");
+            System.out.println("Successfully executes the situation where given an invalid destination");
         }
         catch (Exception e){
-            System.out.println("This threw an unexpected exception, program should have continued to 168 hours" + e);
+            System.out.println("This threw an unexpected exception, program should have continued to 168 hours " + e +'\n');
         }
-        System.out.println("Done!");
-        tNet.printPlan();
+        try{
+
+            tNet.getLineByName("Scarlet").getNext(tNet.getLineByName("Scarlet").findStation("FakeStaion"));
+        }
+        catch (StationNotFoundException e){
+            System.out.println("Your getNext function the appropriate exception\n");
+        }
+        try{
+            tNet.getLineByName("Scarlet").findStation("FakeStation");
+        }
+        catch (StationNotFoundException e){
+            System.out.println("Your findStation function the appropriate exception\n");
+        }
+        try{
+            tNet.getLineByName("Scarlet").travelOneStation(tNet.getLineByName("Scarlet").findStation("FakeStaion"), null);
+        }
+        catch (StationNotFoundException e){
+            System.out.println("Your travelOneStation function the appropriate exception\n");
+        }
+
 
 
 
