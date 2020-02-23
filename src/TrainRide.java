@@ -39,10 +39,13 @@ class Tester extends TrainRide {
         catch (Exception e){
             System.out.println("This threw an unexpected exception, program should have continued to 168 hours " + e +'\n');
         }
+        //IMPORTANT: Exceptions are package private. To test exceptions, you must add this .java to your package file and run it within the package. Only then will this code work.
+        /*
         try{
 
             tNet.getLineByName("Scarlet").getNext(tNet.getLineByName("Scarlet").findStation("FakeStaion"));
         }
+
         catch (StationNotFoundException e){
             System.out.println("Your getNext function the appropriate exception\n");
         }
@@ -57,7 +60,7 @@ class Tester extends TrainRide {
         }
         catch (StationNotFoundException e){
             System.out.println("Your travelOneStation function the appropriate exception\n");
-        }
+        }*/
 
 
 
@@ -136,32 +139,5 @@ class Tester extends TrainRide {
         tNet.addLines(lines);
 
         return tNet;
-    }
-}
-
-/**Exceptions from COMP250 Provided Content
- *
- * @author McGill University COMP250 Teaching Staff
- */
-class StationNotFoundException extends RuntimeException {
-    String name;
-
-    public StationNotFoundException(String n) {
-        name = n;
-    }
-
-    public String toString() {
-        return "StationNotFoundException[" + name + "]";
-    }
-}
-class LineNotFoundException extends RuntimeException {
-    String name;
-
-    public LineNotFoundException(String n) {
-        name = n;
-    }
-
-    public String toString() {
-        return "LineNotFoundException[" + name + "]";
     }
 }
