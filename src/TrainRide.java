@@ -8,6 +8,8 @@ import COMP250A2_W2020.*;
  */
 class Tester extends TrainRide {
     public static void main(String[] args) {
+        int points = 0;
+        RandomTrains rand = new RandomTrains(777);
         System.out.println("Welcome to the Confusing Railroad!");
 
         // Constructs a train network
@@ -35,9 +37,9 @@ class Tester extends TrainRide {
         try {
             tNet.travel("5.St Mungo's", "Scarlet", "3. Leaky Cauldron", "Scarlet");
             System.out.println("Successfully executes the situation where given an invalid destination");
-        }
-        catch (Exception e){
-            System.out.println("This threw an unexpected exception, program should have continued to 168 hours " + e +'\n');
+            points++;
+        } catch (Exception e) {
+            System.out.println("This threw an unexpected exception, program should have continued to 168 hours " + e + '\n');
         }
         //IMPORTANT: Exceptions are package private. To test exceptions, you must add this .java to your package file and run it within the package. Only then will this code work.
         /*
@@ -63,14 +65,70 @@ class Tester extends TrainRide {
         }*/
 
 
-
-
         tNet.printPlan();
         // Resets the network to its initial position
         System.out.println("Resetting the network");
         tNet.undance();
         tNet.printPlan();
+
+        System.out.println("Testing lots of connections");
+        TrainLine[] manyConnections = new TrainLine[20];
+        for (int i = 0; i < 20; i++) {
+            TrainLine current = rand.nextTrainLine();
+            manyConnections[i] = current;
+        }
+        for (int i = 1; i < manyConnections.length; i++) {
+            TrainLine lineA = manyConnections[i];
+            TrainLine lineB = manyConnections[i - 1];
+            manyConnections[i].getLeftTerminus().setConnection(lineB, manyConnections[i - 1].getLeftTerminus());
+            manyConnections[i - 1].getLeftTerminus().setConnection(lineA, manyConnections[i].getLeftTerminus());
+        }
+        tNet = new TrainNetwork(20);
+        tNet.addLines(manyConnections);
+        tNet.travel(tNet.getLines()[0].getLeftTerminus().getRight().getName(),
+                tNet.getLines()[0].getName(),
+                tNet.getLines()[19].getRightTerminus().getLeft().getName(),
+                tNet.getLines()[19].getName());
+        tNet.undance();
+        tNet.travel(tNet.getLines()[0].getRightTerminus().getName(),
+                tNet.getLines()[0].getName(), tNet.getLines()[19].getRightTerminus().getLeft().getName(),
+                tNet.getLines()[19].getName());
+        TrainLine[] oldLines = tNet.getLines();
+        TrainLine[] newLines = rand.nextTrainLineArray(6);
+        TrainLine[] allLines = new TrainLine[oldLines.length + newLines.length];
+        int newLinesAdded = 0;
+        int oldLinesAdded = 0;
+        for (int i = 0; i < allLines.length; i++) {
+            if (i % (oldLines.length / newLines.length) == 0 && newLinesAdded < newLines.length) { //Evenly spaces newly added items thru array
+                allLines[i] = newLines[newLinesAdded];
+                newLinesAdded++;
+            } else {
+                allLines[i] = oldLines[oldLinesAdded];
+                oldLinesAdded++;
+            }
+                    /*try{                                                                           //A version with new appended to old
+                    allLines[i] = oldLines[i];}
+                    catch(ArrayIndexOutOfBoundsException e){
+                        allLines[i] = newLines[i - oldLines.length];
+                    }*/
+        }
+        tNet.addLines(allLines);
+        for (int i = 1; i < tNet.getLines().length; i++) {
+            rand.addConnectingStop(tNet.getLines()[i], tNet.getLines()[i - 1]);
+        }
+        System.out.println("Testing gnarley lines in between, it should go quicc here cause it is always on connectors");
+        if (tNet.travel(tNet.getLines()[0].getRightTerminus().getLeft().getName(),
+                tNet.getLines()[0].getName(),
+                tNet.getLines()[tNet.getLines().length - 1].getRightTerminus().getLeft().getName(),
+                tNet.getLines()[tNet.getLines().length - 1].getName()) == 30){
+            points++;
+        }else{
+            System.out.println("Failed test, took wrong hours to complete traversal with a ton of transfers");
+        }
+
+        System.out.println("Tests concluded with " + points + " out of a possible N"); //TODO: integrate points system to other tests.
     }
+
 
     // Calls constructors and methods to implement the network shown in the handout
     // map.
@@ -135,7 +193,7 @@ class Tester extends TrainRide {
         t4.setConnection(l3, u1);
 
         TrainNetwork tNet = new TrainNetwork(1);
-        TrainLine[] lines = { l1, l2, l3 };
+        TrainLine[] lines = {l1, l2, l3};
         tNet.addLines(lines);
 
         return tNet;
